@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SwaggBooster</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Анимированный фон -->
+    <div class="bg-animation"></div>
+
+    <div class="container">
+        <!-- Секция: Профиль -->
+        <div id="profile" class="tab-content active">
+            <h2>Профиль 🍏</h2>
+            <div class="card glass">
+                <p>Салют, <span id="tg-username" class="highlight">Геймер</span>! ✌️</p>
+                <p>Статус буста: <span class="badge offline">Спит 💤</span></p>
+                <p>Твой ID: <span id="tg-id" onclick="easterEgg()">...</span></p>
+            </div>
+
+            <div class="card glass quote-card">
+                <p id="daily-quote">"Пинг — это иллюзия, буст — это реальность." 🧘‍♂️</p>
+            </div>
+
+            <button class="btn primary pulse-btn" onclick="switchTab('buy')">🚀 Врубить турбину</button>
+        </div>
+
+        <!-- Секция: Рефералка -->
+        <div id="referral" class="tab-content">
+            <h2>Братва 🤝</h2>
+            <div class="card glass">
+                <p>Зови кентов — получай халявные часы буста! 🎁</p>
+                <p>Приведено бро: <strong class="bounce-text">0</strong></p>
+                <p>Налутано: <strong>0 ₽</strong> 💸</p>
+                <div class="ref-link-box">
+                    <input type="text" id="ref-link" value="https://t.me/SwaggBoosterBot?start=ref123" readonly>
+                    <button class="btn secondary" onclick="copyRef()">Скопировать</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Секция: Купить -->
+        <div id="buy" class="tab-content">
+            <h2>Прокачка 💎</h2>
+            <div class="card glass plan">
+                <h3>Лайт (1 Месяц) 🥉</h3>
+                <p class="price">150 ₽</p>
+                <button class="btn primary">Забрать</button>
+            </div>
+            <div class="card glass plan">
+                <h3>Про (3 Месяца) 🥈 <span class="badge sale">Топчик 🔥</span></h3>
+                <p class="price">400 ₽</p>
+                <button class="btn primary">Забрать</button>
+            </div>
+            <div class="card glass plan">
+                <h3>Киберспорт (Год) 🥇 <span class="badge sale">-30% 🤑</span></h3>
+                <p class="price">1200 ₽</p>
+                <button class="btn primary">Забрать</button>
+            </div>
+        </div>
+
+        <!-- Секция: Сервера (Игровые Зоны) -->
+        <div id="servers" class="tab-content">
+            <h2>Игровые узлы 🌍</h2>
+            <div class="card glass server-list">
+                <div class="server-item">
+                    <span>🇳🇱 Амстердам (EU West)</span>
+                    <span class="ping good">24 ms 🟢</span>
+                </div>
+                <div class="server-item">
+                    <span>🇩🇪 Франкфурт (EU Central)</span>
+                    <span class="ping good">32 ms 🟢</span>
+                </div>
+                <div class="server-item">
+                    <span>🇺🇸 Нью-Йорк (NA East)</span>
+                    <span class="ping avg">115 ms 🟡</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Секция: Топ -->
+        <div id="top" class="tab-content">
+            <h2>Зал славы 🏆</h2>
+            <div class="card glass list">
+                <div class="list-item"><span>1. @durov 👑</span> <strong>142 бро</strong></div>
+                <div class="list-item"><span>2. @cyber_ninja 🥷</span> <strong>89 бро</strong></div>
+                <div class="list-item"><span>3. @lag_hunter 🏹</span> <strong>45 бро</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Нижняя навигация -->
+    <nav class="bottom-nav glass-nav">
+        <div class="nav-item active" onclick="switchTab('profile', this)"><span class="nav-icon">👤</span>Профиль</div>
+        <div class="nav-item" onclick="switchTab('referral', this)"><span class="nav-icon">🤝</span>Рефка</div>
+        <div class="nav-item" onclick="switchTab('buy', this)"><span class="nav-icon">💎</span>Магазин</div>
+        <div class="nav-item" onclick="switchTab('servers', this)"><span class="nav-icon">🌍</span>Узлы</div>
+        <div class="nav-item" onclick="switchTab('top', this)"><span class="nav-icon">🏆</span>Топ</div>
+    </nav>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
