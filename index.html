@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SwaggBooster - Ускоритель Сети</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Экран загрузки (Splash Screen) -->
+    <div id="loading-screen">
+        <div class="loader-content">
+            <div class="main-logo">⚡</div>
+            <h1 class="brand-name">SwaggBooster</h1>
+            <p class="loader-status">Синхронизация с сервером...</p>
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <!-- Основной контейнер приложения -->
+    <div class="container" id="app-content" style="display: none;">
+        
+        <!-- СЕКЦИЯ: ПРОФИЛЬ -->
+        <div id="profile" class="tab-content active">
+            <div class="header-section">
+                <h2>Личный кабинет</h2>
+                <span class="user-badge" id="user-status-badge">Базовый аккаунт</span>
+            </div>
+            
+            <div class="card glass profile-card">
+                <div class="user-info">
+                    <div class="avatar-placeholder" id="avatar-letter">U</div>
+                    <div>
+                        <h3 id="tg-username">Загрузка...</h3>
+                        <p class="subtext">ID: <span id="tg-id">000000000</span></p>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="subscription-status">
+                    <div class="status-row">
+                        <span>Статус подписки:</span>
+                        <strong id="sub-status-text" class="text-danger">Неактивна</strong>
+                    </div>
+                    <div class="status-row">
+                        <span>Срок действия:</span>
+                        <span id="sub-date">Доступ ограничен</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Модуль управления ускорителем -->
+            <div class="card glass booster-control">
+                <div class="control-header">
+                    <div>
+                        <h3>Игровой оптимизатор</h3>
+                        <p class="subtext">Сокращение задержки и стабилизация пакетов</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="booster-toggle" onchange="toggleBooster()">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div id="booster-stats" class="booster-stats hidden">
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">Текущий пинг</span>
+                            <span class="stat-value text-success" id="stat-ping">18 мс</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Стабильность</span>
+                            <span class="stat-value text-success">99.8%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Оптимизировано</span>
+                            <span class="stat-value" id="stat-traffic">0.0 МБ</span>
+                        </div>
+                    </div>
+                    <div class="pulse-indicator">
+                        <span class="pulse-dot"></span>
+                        <span class="pulse-text">Туннель оптимизации активен</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Информационная цитата -->
+            <div class="card glass quote-card">
+                <p id="daily-quote">"Качественное подключение — залог стабильной работы в сети."</p>
+            </div>
+        </div>
+
+        <!-- СЕКЦИЯ: РЕФЕРАЛЫ -->
+        <div id="referrals" class="tab-content">
+            <h2>Реферальная программа</h2>
+            <p class="section-description">Приглашайте новых пользователей и получайте бонусные средства на баланс или бесплатные дни подписки.</p>
+            
+            <div class="stats-row-grid">
+                <div class="card glass mini-stat">
+                    <span class="stat-label">Приглашено</span>
+                    <strong class="stat-number" id="ref-count">0</strong>
+                </div>
+                <div class="card glass mini-stat">
+                    <span class="stat-label">Баланс</span>
+                    <strong class="stat-number text-success" id="ref-balance">0.00 ₽</strong>
+                </div>
+            </div>
+
+            <div class="card glass">
+                <h3>Ваша реферальная ссылка</h3>
+                <div class="ref-link-box">
+                    <input type="text" id="ref-link" value="https://t.me/SwaggBoosterBot?start=ref000000" readonly>
+                    <button class="btn secondary btn-sm" onclick="copyRefLink()">Копировать</button>
+                </div>
+                <p class="subtext mt-10">Вы получаете 15% от всех платежей ваших рефералов непосредственно на ваш баланс.</p>
+            </div>
+
+            <div class="card glass">
+                <h3>Последние действия</h3>
+                <div class="activity-list" id="ref-activity">
+                    <div class="activity-item empty">История приглашений пока пуста</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- СЕКЦИЯ: МАГАЗИН (ПОКУПКА) -->
+        <div id="shop" class="tab-content">
+            <h2>Доступные тарифы</h2>
+            <p class="section-description">Выберите подходящий период подписки для снятия всех ограничений по скорости и доступу.</p>
+            
+            <div class="plans-list">
+                <!-- Тариф 1 -->
+                <div class="card glass plan-card">
+                    <div class="plan-header">
+                        <div>
+                            <h3>Тариф "Стандарт"</h3>
+                            <p class="subtext">Доступ на 1 месяц</p>
+                        </div>
+                        <span class="plan-price">150 ₽</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li>Максимальная скорость соединения</li>
+                        <li>Приоритетный игровой трафик</li>
+                        <li>Поддержка 24/7</li>
+                    </ul>
+                    <button class="btn primary" onclick="openPaymentModal('Тариф Стандарт (1 месяц)', 150)">Оформить подписку</button>
+                </div>
+
+                <!-- Тариф 2 -->
+                <div class="card glass plan-card popular">
+                    <div class="popular-badge">Популярный выбор</div>
+                    <div class="plan-header">
+                        <div>
+                            <h3>Тариф "Комфорт"</h3>
+                            <p class="subtext">Доступ на 3 месяца</p>
+                        </div>
+                        <div class="price-block">
+                            <span class="plan-price">400 ₽</span>
+                            <span class="discount-badge">-11%</span>
+                        </div>
+                    </div>
+                    <ul class="plan-features">
+                        <li>Все функции тарифа Стандарт</li>
+                        <li>Выделенный IP-адрес по запросу</li>
+                        <li>Оптимизация пинга в играх</li>
+                    </ul>
+                    <button class="btn primary" onclick="openPaymentModal('Тариф Комфорт (3 месяца)', 400)">Оформить подписку</button>
+                </div>
+
+                <!-- Тариф 3 -->
+                <div class="card glass plan-card">
+                    <div class="plan-header">
+                        <div>
+                            <h3>Тариф "Киберспорт"</h3>
+                            <p class="subtext">Доступ на 12 месяцев</p>
+                        </div>
+                        <div class="price-block">
+                            <span class="plan-price">1200 ₽</span>
+                            <span class="discount-badge">-33%</span>
+                        </div>
+                    </div>
+                    <ul class="plan-features">
+                        <li>Максимальный приоритет на серверах</li>
+                        <li>Годовое обслуживание без изменений цены</li>
+                        <li>Полная анонимность и защита данных</li>
+                    </ul>
+                    <button class="btn primary" onclick="openPaymentModal('Тариф Киберспорт (12 месяцев)', 1200)">Оформить подписку</button>
+                </div>
+            </div>
+
+            <!-- Промокод -->
+            <div class="card glass promocode-section">
+                <h3>Активация купона / промокода</h3>
+                <div class="promo-box">
+                    <input type="text" id="promo-input" placeholder="Введите промокод">
+                    <button class="btn secondary btn-sm" onclick="applyPromo()">Применить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- СЕКЦИЯ: НАСТРОЙКИ (УПРАВЛЕНИЕ) -->
+        <div id="settings" class="tab-content">
+            <h2>Настройки и Управление</h2>
+            <p class="section-description">Конфигурация параметров работы оптимизатора и связь с администрацией.</p>
+
+            <div class="card glass">
+                <h3>Режим оптимизации</h3>
+                <div class="settings-group">
+                    <label class="radio-option">
+                        <input type="radio" name="mode" value="auto" checked onchange="updateSettingsInfo()">
+                        <span class="radio-custom"></span>
+                        <div>
+                            <strong>Автоматический выбор</strong>
+                            <p class="subtext">Система сама подбирает оптимальный маршрут</p>
+                        </div>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="mode" value="gaming" onchange="updateSettingsInfo()">
+                        <span class="radio-custom"></span>
+                        <div>
+                            <strong>Игровой режим (Минимальный пинг)</strong>
+                            <p class="subtext">Фокус на UDP пакеты и стабильность фреймрейта</p>
+                        </div>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="mode" value="media" onchange="updateSettingsInfo()">
+                        <span class="radio-custom"></span>
+                        <div>
+                            <strong>Медиа / Веб-серфинг</strong>
+                            <p class="subtext">Повышенная буферизация потокового видео</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="card glass">
+                <h3>Дополнительно</h3>
+                <div class="menu-list">
+                    <div class="menu-item" onclick="clearCache()">
+                        <span>Очистить кэш приложения</span>
+                        <span class="chevron">›</span>
+                    </div>
+                    <div class="menu-item" onclick="openSupport()">
+                        <span>Служба поддержки / Помощь</span>
+                        <span class="chevron">›</span>
+                    </div>
+                    <div class="menu-item">
+                        <span>Политика конфиденциальности</span>
+                        <span class="chevron">›</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="version-text">SwaggBooster v2.1.0 (Управление ботом)</div>
+        </div>
+
+        <!-- СЕКЦИЯ: ТОП -->
+        <div id="top" class="tab-content">
+            <h2>Рейтинг пользователей</h2>
+            <p class="section-description">Список ведущих партнеров, внесших наибольший вклад в развитие нашей сети распределения трафика.</p>
+            
+            <div class="card glass">
+                <div class="table-container">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">Место</th>
+                                <th style="width: 55%;">Пользователь</th>
+                                <th style="width: 30%; text-align: right;">Рефералы</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="top-three gold">
+                                <td>🥇 1</td>
+                                <td>@durov</td>
+                                <td class="text-right">1,420</td>
+                            </tr>
+                            <tr class="top-three silver">
+                                <td>🥈 2</td>
+                                <td>@network_master</td>
+                                <td class="text-right">894</td>
+                            </tr>
+                            <tr class="top-three bronze">
+                                <td>🥉 3</td>
+                                <td>@alex_cyber</td>
+                                <td class="text-right">451</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>@dmitry_v</td>
+                                <td class="text-right">210</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>@ivan_sk</td>
+                                <td class="text-right">189</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>@elena_p</td>
+                                <td class="text-right">95</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>@booster_user</td>
+                                <td class="text-right">43</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ОКНО ОПЛАТЫ (MOCK BANCO / CARD CHECKOUT) -->
+    <div id="payment-modal" class="modal-overlay">
+        <div class="modal-content glass animate-slide-up">
+            <div class="modal-header">
+                <h3>Защищенная оплата картой</h3>
+                <button class="close-btn" onclick="closePaymentModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="order-summary">
+                    <span>Товар:</span>
+                    <strong id="modal-item-name">Подписка</strong>
+                </div>
+                <div class="order-summary mb-20">
+                    <span>К оплате:</span>
+                    <strong id="modal-item-price" class="text-success">0 ₽</strong>
+                </div>
+
+                <form id="card-form" onsubmit="processCardPayment(event)">
+                    <div class="form-group">
+                        <label for="card-number">Номер карты</label>
+                        <div class="input-with-icon">
+                            <input type="text" id="card-number" placeholder="2200 0000 0000 0000" maxlength="19" required>
+                            <span class="card-icon">💳</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="card-expiry">Срок действия</label>
+                            <input type="text" id="card-expiry" placeholder="ММ/ГГ" maxlength="5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="card-cvc">CVC / CVV</label>
+                            <input type="password" id="card-cvc" placeholder="***" maxlength="3" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="card-holder">Владелец карты</label>
+                        <input type="text" id="card-holder" placeholder="IVAN IVANOV" style="text-transform: uppercase;" required>
+                    </div>
+
+                    <div class="secure-badge">
+                        🔒 Данные шифруются по стандарту PCI DSS
+                    </div>
+
+                    <button type="submit" class="btn primary w-100 mt-15" id="pay-submit-btn">Оплатить картой</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Нижняя навигационная панель (Таббар) -->
+    <nav class="bottom-nav glass-nav" id="app-nav" style="display: none;">
+        <div class="nav-item active" onclick="switchTab('profile', this)">
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">Профиль</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('referrals', this)">
+            <span class="nav-icon">👥</span>
+            <span class="nav-label">Рефералы</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('shop', this)">
+            <span class="nav-icon">💳</span>
+            <span class="nav-label">Магазин</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('settings', this)">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-label">Настройки</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('top', this)">
+            <span class="nav-icon">🏆</span>
+            <span class="nav-label">Топ</span>
+        </div>
+    </nav>
+
+    <script src="app.js"></script>
+</body>
+</html>
